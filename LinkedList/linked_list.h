@@ -1,4 +1,5 @@
 #ifndef LINKED_LIST_H
+#define LINKED_LIST_H
 struct Node;
 typedef struct Node* PtrToNode;
 typedef struct Head* PtrToHead;
