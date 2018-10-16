@@ -13,6 +13,7 @@ Position find(int elem, List l);
 Position find_previous(int elem, List l);
 void delete(int elem, List l);
 void insert(int elem, List l, Position p);
+void delete_list(List l);
 #endif // LINKED_LIST_H
 
 struct Node {

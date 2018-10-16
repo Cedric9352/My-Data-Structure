@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <stddef.h>
 #include <linked_list.h>
 
@@ -12,7 +14,7 @@ int is_last(Position p, List l) {
 }
 
 Position find(int elem, List l) {
-    // assume l is header and not NULL
+    // assume l is not NULL
     Position p;
     p = l->next;
     while(p != NULL && p->element != elem) {
@@ -22,9 +24,9 @@ Position find(int elem, List l) {
 }
 
 Position find_previous(int elem, List l) {
-    // assume l is header and not NULL
+    // assume l is not NULL
     Position p;
-    p = l;
+    p = l->next;
     while(p->next != NULL && p->next->element != elem) {
         p = p->next;
     }
@@ -32,7 +34,7 @@ Position find_previous(int elem, List l) {
 }
 
 void delete(int elem, List l) {
-    // assume l is header and not NULL
+    // assume l is not NULL
     Position p, tmp_ptr;
     p = find_previous(elem, l);
     // find element at p
@@ -44,7 +46,7 @@ void delete(int elem, List l) {
 }
 
 void insert(int elem, List l, Position p) {
-    // assume l is header, both l & p are not NULL
+    // assume both l & p are not NULL
     Position tmp_ptr;
     tmp_ptr = (Position)malloc(sizeof(struct Node));
     if(tmp_ptr == NULL) {
@@ -59,5 +61,18 @@ void insert(int elem, List l, Position p) {
     } else {
         tmp_ptr->next = p->next;
         p->next = tmp_ptr;
+    }
+}
+
+void delete_list(List l) {
+    // assume l is not NULL
+    Position p, tmp_ptr;
+    p = l->next;
+    // delete first node
+    l->next = NULL;
+    while(p != NULL) {
+        tmp_ptr = p->next;
+        free(p);
+        p = tmp_ptr;
     }
 }
