@@ -45,12 +45,12 @@ void push(int elem, Stack s) {
     s->next = tmp_ptr;
 }
 
-int top(Stack s) {
+int* top(Stack s) {
     if(!is_empty(s)) {
-        return s->next->element;
+        return &(s->next->element);
     }
     printf("empty stack");
-    return -1;
+    return NULL;
 }
 
 void pop(Stack s) {

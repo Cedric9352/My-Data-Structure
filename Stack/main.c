@@ -8,5 +8,7 @@ int main()
     push(2, s);
     push(3, s);
     print_stack(s);
+    int *peek = top(s);
+    printf("\ntop element is: %d\n", *peek);
     return 0;
 }
