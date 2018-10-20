@@ -6,9 +6,10 @@ typedef struct Head* PtrToHead;
 typedef PtrToHead List;
 typedef PtrToNode Position;
 
-List make_empty(List l);
 int is_empty(List l);
-int is_last(Position p, List l);
+int is_last(Position p);
+List create_list();
+List make_empty(List l);
 Position find(int elem, List l);
 Position find_previous(int elem, List l);
 void delete(int elem, List l);
