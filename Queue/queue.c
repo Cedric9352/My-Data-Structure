@@ -4,14 +4,26 @@
 #include <queue.h>
 
 int is_empty(Queue q) {
+    if(q == NULL) {
+        printf("must not be used on a NULL pointer");
+        exit(EXIT_FAILURE);
+    }
     return q->size == 0;
 }
 
 int is_full(Queue q) {
+    if(q == NULL) {
+        printf("must not be used on a NULL pointer");
+        exit(EXIT_FAILURE);
+    }
     return q->size == q->capacity;
 }
 
 void make_empty(Queue q) {
+    if(q == NULL) {
+        printf("must not be used on a NULL pointer");
+        exit(EXIT_FAILURE);
+    }
     q->size = 0;
     q->rear = 0;
     q->front = 1;
@@ -21,12 +33,12 @@ Queue create_queue(int max_elements) {
     Queue q;
     q = (Queue)malloc(sizeof(struct QueueRecord));
     if(q == NULL) {
-        printf("memory out of space");
+        printf("out of memory");
         return NULL;
     }
     q->array = (int*)malloc(sizeof(int)*max_elements);
     if(q->array == NULL) {
-        printf("memory out of space");
+        printf("out of memory");
         return NULL;
     }
     q->capacity = max_elements;
@@ -47,21 +59,32 @@ void enqueue(int x, Queue q) {
     }
 }
 
-void dequeue(Queue q) {
+int dequeue(Queue q) {
     if(is_empty(q)) {
         printf("empty queue");
-        return;
+        exit(EXIT_FAILURE);
     } else {
         --q->size;
+        int tmp = q->array[q->front];
         q->front = q->front+1 == q->capacity ? 0 : q->front+1;
+        return tmp;
     }
 }
 
-int *peek(Queue q) {
+int peek(Queue q) {
     if(is_empty(q)) {
         printf("empty queue");
-        return NULL;
+        exit(EXIT_FAILURE);
     } else {
-        return &(q->array[q->front]);
+        return q->array[q->front];
     }
+}
+
+void delete_queue(Queue q) {
+    if(q == NULL) {
+        printf("must not be used on a NULL pointer");
+        exit(EXIT_FAILURE);
+    }
+    free(q->array);
+    free(q);
 }
