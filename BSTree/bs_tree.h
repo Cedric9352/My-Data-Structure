@@ -8,9 +8,9 @@ SearchTree make_empty(SearchTree t);
 Position find(int elem, SearchTree t);
 Position find_min(SearchTree t);
 Position find_max(SearchTree t);
-Position insert(int elem, SearchTree t);
-Position delete(int elem, SearchTree t);
-Position delete_min(SearchTree t);
+SearchTree insert(int elem, SearchTree t);
+SearchTree delete(int elem, SearchTree t);
+int delete_min(SearchTree t);
 #endif // BS_TREE_H
 
 struct TreeNode
