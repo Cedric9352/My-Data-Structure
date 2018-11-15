@@ -27,7 +27,7 @@ private:
  * static variable
  */
 const unsigned EasyDate::common_days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-const std::string EasyDate::common_name[12] = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
+const std::string EasyDate::common_name[12] = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
 /**
  * constructor
  */
