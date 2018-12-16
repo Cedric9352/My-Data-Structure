@@ -7,76 +7,83 @@
 /**
  * class easy date
  */
-class EasyDate
+class easy_date
 {
-friend std::ostream& operator<<(std::ostream &, const EasyDate &);
 public:
-    EasyDate(unsigned months, unsigned days);
-    EasyDate(const EasyDate&) = default;
-    EasyDate& operator=(const EasyDate&) = default;
-    ~EasyDate() = default;
-    EasyDate& operator+(unsigned n);
-    EasyDate& operator-(unsigned n);
+    typedef std::size_t date_type;
+    friend std::ostream& operator<<(std::ostream &, const easy_date&);
+    friend easy_date operator+(const easy_date&, date_type);
+    friend easy_date operator-(const easy_date&, date_type);
+    easy_date(date_type, date_type, date_type);
+    easy_date(const easy_date&) = default;
+    easy_date(easy_date&&) = default;
+    easy_date& operator=(const easy_date&) = default;
+    easy_date& operator=(easy_date&&) = default;
+    ~easy_date() = default;
+    static bool is_leap_year(date_type year) { return (year % 100 == 0) ? (year % 400 == 0) : (year % 4 == 0); }
 private:
-    static const unsigned common_days[12];
+    static const date_type common_days[12];
     static const std::string common_name[12];
-    unsigned days;
-    unsigned months;
+    date_type day;
+    date_type month;
+    date_type year;
 };
 /**
  * static variable
  */
-const unsigned EasyDate::common_days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-const std::string EasyDate::common_name[12] = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
+const easy_date::date_type easy_date::common_days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+const std::string easy_date::common_name[12] = {"Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
 /**
  * constructor
  */
-EasyDate::EasyDate(unsigned months = 1, unsigned days = 1): days(days), months(months)
+easy_date::easy_date(date_type year = 1900, date_type month = 1, date_type day = 1): day(day), month(month), year(year)
 {
-    if(days > 31 || months > 12) {
-        throw std::runtime_error("wrong days or months");
-    } else if(common_days[months-1] < days) {
-        throw std::runtime_error("exceed maximum days");
+    if(month > 12) { throw std::range_error("wrong month"); }
+    if(month != 2) { if(day > common_days[month]) { throw std::range_error("wrong day for given month"); } }
+    else {
+        if(easy_date::is_leap_year(year)) { if(day > common_days[month]) { throw std::range_error("wrong day for given month"); } }
+        else { if(day > common_days[month]+1) { throw std::range_error("wrong day for given month"); } }
     }
 }
 /**
- * operator
+ * operator add/minus
  */
-EasyDate& EasyDate::operator+(unsigned n)
+easy_date operator+(const easy_date &date, easy_date::date_type days)
 {
-    unsigned months = this->months, max_days = this->common_days[months-1];
-    unsigned days = this->days+n;
-    while(days > max_days) {
-        days -= max_days;
-        ++months;
-        months = months == 13 ? 1 : months;
-        max_days = this->common_days[months-1];
+    easy_date::date_type year = date.year;
+    easy_date::date_type month = date.month, max_days = (month != 2) ? easy_date::common_days[month-1]
+                                                                     : (easy_date::is_leap_year(year) ? easy_date::common_days[month-1]+1 : easy_date::common_days[month-1]);
+    easy_date::date_type day = date.day+days;
+    while(day > max_days) {
+        day -= max_days;
+        ++month;
+        year = month == 13 ? year+1 : year;
+        month = month == 13 ? 1 : month;
+        max_days = (month != 2) ? easy_date::common_days[month-1]
+                                : (easy_date::is_leap_year(year) ? easy_date::common_days[month-1]+1 : easy_date::common_days[month-1]);
     }
-    this->months = months;
-    this->days = days;
-    return *this;
+    return easy_date(year, month, day);
 }
-EasyDate& EasyDate::operator-(unsigned n)
+easy_date operator-(const easy_date &date, easy_date::date_type days)
 {
-    unsigned months = this->months;
-    unsigned days = this->days;
-    if(days > n) {
-        days -= n;
-    } else {
-        while(days <= n) {
-            days += this->common_days[months-1];
-            --months;
-            months = months == 0 ? 12 : months;
-        }
-        days -= n;
+    easy_date::date_type year = date.year;
+    easy_date::date_type month = date.month;
+    easy_date::date_type day = date.day;
+    while(day <= days) {
+        --month;
+        year = month == 0 ? year-1 : year;
+        month = month == 0 ? 12 : month;
+        day += (month != 2) ? easy_date::common_days[month-1]
+                            : (easy_date::is_leap_year(year) ? easy_date::common_days[month-1]+1 : easy_date::common_days[month-1]);
     }
-    this->months = months;
-    this->days = days;
-    return *this;
+    day -= days;
+    return easy_date(year, month, day);
 }
-std::ostream& operator<<(std::ostream &os, const EasyDate &ed)
+std::ostream& operator<<(std::ostream &os, const easy_date &date)
 {
-    os << ed.common_name[ed.months-1] << ", " << ed.days;
+    os << date.year << ", "
+       << easy_date::common_name[date.month-1]  << ", "
+       << date.day;
     return os;
 }
 #endif // EASY_DATE_H

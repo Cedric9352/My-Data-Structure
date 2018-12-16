@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    EasyDate ed(12, 31);
-    cout << ed + 10 << endl;
+    easy_date date(2017, 1, 1);
+    cout << date - 365 << endl;
     return 0;
 }
